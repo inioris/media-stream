@@ -1,5 +1,6 @@
 import './assets/styles.css'
 import React, { useState } from 'react'
+import lodash from 'lodash'
 
 const Exercise01 = () => {
   const movies = [
@@ -44,7 +45,6 @@ const Exercise01 = () => {
 
   const onClickHandle = (data) => {
     const movie = cart.find((item) => item.id === data.id)
-    console.log(movie)
     if (movie) {
       movie.quantity = movie.quantity + 1
       movie.price = data.price * movie.quantity
@@ -91,14 +91,14 @@ const Exercise01 = () => {
   }
 
   const discont = (sale) => {
+    let resDescount = 0
     // eslint-disable-next-line array-callback-return
-    const response = discountRules.map((item) => {
-      if (item.m.equals(sale)) {
-        return item.discount
+    discountRules.map((item) => {
+      if (lodash.isEqual(item.m, sale)) {
+        resDescount = item.discount
       }
     })
-
-    return response
+    return resDescount
   }
 
   const getTotal = () => {
@@ -110,8 +110,10 @@ const Exercise01 = () => {
         priceTotal = Number(item.price + priceTotal)
         ofert.push(item.quantity)
       })
-      const isOffers = discont(ofert)
-      console.log(isOffers)
+    }
+    const isOffers = discont(ofert)
+    if (isOffers) {
+      priceTotal = priceTotal - Number(isOffers * priceTotal)
     }
     return priceTotal
   }
